@@ -23,15 +23,11 @@ impl UserStorage {
     }
 
     pub fn fetch(&self) -> Vec<User> {
-        // Clone is necessary here to release the lock quickly.
-        // This allows other requests to access storage while
-        // the handler serializes the response.
         self.users.values().cloned().collect()
     }
 
     pub fn update(&mut self, id: &str, updated_user: User) -> Option<User> {
         if let Some(user) = self.users.get_mut(id) {
-            // Only update name and email, preserve the ID
             user.name = updated_user.name;
             user.email = updated_user.email;
             Some(user.clone())
